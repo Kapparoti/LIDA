@@ -448,7 +448,7 @@ public class LIDAController {
 	@FXML
 	private void showAbout() {
 		try {
-			String url = "https://github.com/Kapparoti/LICA";
+			String url = "https://github.com/Kapparoti/LIDA";
 			Desktop.getDesktop().browse(new URI(url));
 		} catch (Exception ex) {
 			printMessage(ex.getMessage());
