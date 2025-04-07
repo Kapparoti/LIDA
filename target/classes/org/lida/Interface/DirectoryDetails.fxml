@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Details showed upon selecting a directory Entity. Controlled by DirectoryDetails -->
+
+<!-- Main HBox containing the all three details columns -->
+<HBox alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="309.0" prefWidth="2000.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+	  fx:controller="org.lida.Interface.DirectoryDetails">
+
+	<!-- Left side: -->
+
+	<!-- Table containing the FileTypeResults, from the contents of the directory -->
+	<TableView fx:id="resultTable" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="430.0" HBox.hgrow="NEVER">
+
+		<!-- Columns for the file type, file count, line count and storage size -->
+		<columns>
+			<TableColumn fx:id="fileTypeColumn" editable="false" prefWidth="100.0" resizable="false" text="File"/>
+			<TableColumn fx:id="fileCountColumn" editable="false" prefWidth="105.0" resizable="false" text="Files count"/>
+			<TableColumn fx:id="lineCountColumn" editable="false" prefWidth="105.0" resizable="false" text="Lines count"/>
+			<TableColumn fx:id="storageSizeColumn" editable="false" prefWidth="120.0" resizable="false" text="Storage size"/>
+		</columns>
+		<columnResizePolicy>
+			<TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+		</columnResizePolicy>
+	</TableView>
+
+	<!-- Center: -->
+
+	<!-- VBox to split the TabPane, the percentage bar HBox and the legend GridPane -->
+	<VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="309.0" prefWidth="750.0" HBox.hgrow="NEVER">
+
+		<!-- TabPane to select the creation of the percentage bar, by files count, line count or storage size -->
+		<TabPane fx:id="percentChoiceTabPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="34.0" prefWidth="735.0" tabClosingPolicy="UNAVAILABLE">
+			<Tab closable="false" disable="true" text="Show values by:"/>
+			<Tab fx:id="fileCountTab" text="Files number"/>
+			<Tab fx:id="lineCountTab" text="Lines number"/>
+			<Tab fx:id="storageSizeTab" text="Storage size"/>
+		</TabPane>
+
+		<!-- HBox be filled by FileDetails with a segment for each file type -->
+		<HBox fx:id="percentageBar" alignment="CENTER" minHeight="60.0" minWidth="750.0" prefHeight="300.0" prefWidth="750.0" VBox.vgrow="ALWAYS"/>
+
+		<!-- Gridpane filled by FileDetails with all the file types and their respective colors -->
+		<GridPane fx:id="legendGridPane" alignment="CENTER" maxHeight="250" maxWidth="750" prefHeight="150.0" prefWidth="750.0" VBox.vgrow="ALWAYS">
+			<columnConstraints>
+				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+			</columnConstraints>
+		</GridPane>
+	</VBox>
+
+	<!-- Right side: -->
+
+	<!-- VBox containing the top bar and the file type Entities list -->
+	<VBox fx:id="rightVBox" fillWidth="false" prefHeight="309.0" prefWidth="820.0">
+
+		<!-- Gray top HBox, with the path label and the open button -->
+		<HBox alignment="CENTER" prefHeight="28.0" prefWidth="820.0" style="-fx-background-color: gainsboro;">
+			<Label fx:id="selectedPathLabel" alignment="CENTER" prefHeight="28.0" prefWidth="550.0" text="Current path:" HBox.hgrow="NEVER"/>
+			<Button mnemonicParsing="false" onAction="#openCurrentPath" prefHeight="28.0" prefWidth="150.0" text="Open" HBox.hgrow="NEVER"/>
+		</HBox>
+
+		<!-- FileDetails will add here an EntityList to show an interactive list of all Entities, inside the directory Entity subtree, with the selected file type -->
+	</VBox>
+</HBox>

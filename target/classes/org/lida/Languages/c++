@@ -1,0 +1,19 @@
+# C++ rules
+
+Comments = [[//, ], [/*, */]]
+
+#Text = [[", \", /", "], [', \', /', ']]
+
+
+Identifiers {
+    Filename {
+        value: ||NAMEOFFILEONLY||
+    }
+}
+
+Dependencies {
+    Include {
+        # #include <file.h>
+        pattern: "^(?:\s+)?#include\s+[<\"](?:\w+/){0,}?(\w+)(?:\.h)?[>\"]"
+    }
+}

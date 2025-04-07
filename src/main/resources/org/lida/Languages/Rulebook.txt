@@ -1,0 +1,204 @@
+# RULEBOOK FOR CREATING LANGUAGE RULE FILES
+
+
+# This is a comment
+
+# Every empty line will be ignored, so their number doesn't matter
+
+
+# Comments declaration must be above all else:
+
+Comments = [[//, ], [/*, */]]
+
+# We say that all of these are commenting modes:
+# Starting with "//" (in line)
+# Starting with "/*" and finishing with "*/"
+
+
+# Following, there is the text:
+
+Text = [[", \", /", "], [', \', /', ']]
+
+# We say that all of these are modes to put text inside code:
+# Starting with: "
+# Ignoring \" and /"
+# Finishing with: " (again)
+
+# Same for '
+
+
+# Variables are strings that can be searched inside the files.
+# They can be used to create more complex behavior in the language rules.
+
+# The pattern is the regex compiled by the java Pattern class to scan the file line by line.
+# (so beware of multi-line syntax)
+
+# ||Variable|| Is used to insert the value of the variable from the current file, !!Variable!! to insert the value of the variable from the other file
+# Because the file association for every rule is made based on recognizing another file's Identifier inside the pattern, !!Variable!! cannot be used inside patterns, only ||Variable||.
+
+Variables {
+    Package {
+        pattern: "^[\t ]*package\s+([\w\.]+)\s*;"
+    }
+}
+
+
+# Adding the parameter DEBUG to a rule will print it whenever it is applied:
+
+Variables {
+    Package {
+        pattern: "^[\t ]*package\s+([\w\.]+)\s*;"
+        DEBUG
+    }
+}
+
+# Will print "Applied Package on: line" for each line applied to.
+
+
+# The variable NAMEOFFILE is a "global" variable containing the name of the file, extension included.
+# To have the name without extension, there is NAMEOFFILEONLY.
+
+# If a Variable, Identifier or Dependency has the "value" parameter, it will be a constant for each file.
+# In a constant, their pattern will be ignored.
+
+# Here's an example:
+
+Filename {
+    value: ||NAMEOFFILE||
+    DEBUG
+}
+
+# Inside the value parameter, there can also be + or - operation between Variables
+
+# Other "global" variables are:
+NAMEOFFILEONLY -> name of the file without extension
+PATHOFFILE -> path of the file
+PATHOFFILEONLY -> path of the file without extension
+NAMEOFDIRECTORY -> name of the directory that contains the file
+PATHOFDIRECTORY -> path of the directory that contains the file
+
+# Then, there are the language rules, Identifiers and Dependencies:
+
+# The order of Identifiers or Dependencies doesn't matter, both can be first or second.
+
+# Both Identifiers and Dependencies have two parameters: the pattern and the total_number.
+
+# Identifiers are keywords used to recognize Dependencies between files.
+# There can be multiple Identifiers with the same keyword, if so their integer key will be different.
+# Every group in the Pattern is saved as an identifier.
+
+# The total_number is the number of times this Identifier can be found in a file.
+# If the total_number is -1, the Identifier can be found infinite times inside a single file.
+
+
+# Here are some examples from java:
+
+Identifiers {
+    Public class {
+        pattern: "^(?:\s+)?(?:public\s+)(?:static|final\s+){0,}class\s+(\w+)"
+    }
+    Protected class {
+        pattern: "^(?:\s+)?(?:protected\s+)(?:static|final\s+){0,}class\s+(\w+)"
+    }
+    Public record {
+        pattern: "^(?:\s+)?(?:public\s+)(?:static|final\s+){0,}record\s+(\w+)"
+    }
+}
+
+Dependencies {
+    Extends {
+        pattern: "^(?:.*?\b)extends\b\s+(\w+)"
+    }
+    Extends {
+        pattern: "^(?:.*?\b)extends\b\s+(\w+)"
+    }
+    Implements {
+        pattern: "^(?:.*?\b)implements\b\s+((?:\w+(?:\s*,\s*\w+)*))\s*;?"
+    }
+}
+
+# The parameter hidden is used to hide the results of a rule (or the entire Variable) from the user
+
+
+# The condition is used to validate the rule after the pattern found the dependency between the current file and another file's Identifier.
+# A condition can be a Variable check (equals), a rule check (already applied) or a pattern (found in the current line).
+
+# A rule check can be local ("||") or on the target ("!!"), for example:
+# In java we can statically use a class only if we imported it, or it's in the same package.
+# We check if this Entity imported the target Entity, to use object instancing:
+
+Object instancing {
+    # new ClassName(
+    pattern: "new\s+(\w+)(?=\()"
+    condition: ||Import||
+}
+
+# It's useful to use !!Variable!! inside the condition, when the other file is already found, and we can swap its Variables values inside the condition.
+# "condition: Package" it's the same as: "!!Package!! == ||Package||"
+
+Object instancing {
+    # new ClassName(
+    pattern: "new\s+(\w+)(?=\()"
+    condition: Package
+}
+
+# If a pattern is used as a condition, it must be inside quotes
+
+# Here's an example from Java:
+
+Dependencies {
+    Import {
+        pattern: "^import\s+(?:[\w]+\.)*([\w]+)\s*;"
+        condition: "^import\s+!!Package!!\.([\w]+)\s*;"
+    }
+}
+
+# Here's an example from JavaScript:
+
+Identifiers {
+    Complete filename {
+        value: ||NAMEOFFILE||
+        hidden
+    }
+}
+
+
+# If two Variables, Identifiers or Dependencies have the same name and are of the same type, a condition using them will only use the first
+
+# We can assign multiple conditions for the same rule as an AND
+# We can copy the same rule with different conditions as an OR
+
+# From java:
+
+Dependencies {
+    Static use {
+        pattern: "\b([A-Z][a-zA-Z0-9]*)(?=\.[a-z][a-zA-Z0-9]*(?:\s*\()?)"
+        condition: Package
+    }
+    Static use {
+        pattern: "\b([A-Z][a-zA-Z0-9]*)(?=\.[a-z][a-zA-Z0-9]*(?:\s*\()?)"
+        condition: ||Import||
+    }
+}
+
+# From Ruby:
+
+Dependencies {
+    Require relative {
+        # require_relative 'file_name'
+        pattern: "^[\s+]*require_relative\s+['\"](?:\w+\/){0,}?(\w+)['\"]"
+        condition: !!PATHOFDIRECTORY!! contains ||PATHOFDIRECTORY||
+        condition: !!PATHOFDIRECTORY!! endswith |!Identifier!|
+    }
+}
+
+
+Another example, writhing this:
+
+condition: "^import\s+!!Package!!\.([\w]+)\s*;"
+
+and this:
+
+!!Package!! == "import\s+(.*?)\.(?:[^.]+\;)"
+
+can have DIFFERENT functions!!

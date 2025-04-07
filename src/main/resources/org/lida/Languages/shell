@@ -1,0 +1,32 @@
+# Shell rules
+
+
+Comments = [[#, ]]
+
+Text = [[", \", /", "], [', \', /', '], [` , \`, `]]
+
+
+Identifiers {
+    Filename {
+        value: ||NAMEOFFILE||
+    }
+}
+
+Dependencies {
+    Source {
+        # source script_name.sh
+        pattern: "source\s+(?:\<\(\w+)*\s*(\w+)\.sh"
+    }
+    Dot {
+        # . script_name.sh
+        pattern: "\.\s+(\w+)\.sh"
+    }
+    New process {
+        # bash script.sh
+        pattern: "bash\s+(\w+)\.sh"
+    }
+    Eval {
+        # eval "$(cat script.sh)"
+        pattern: "eval\s+\"\$\(cat\s+(\w+)\.sh"
+    }
+}

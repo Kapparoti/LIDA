@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Rectangle?>
+
+<!-- Details showed upon selecting a file Entity. Controlled by FileDetails -->
+<!-- Main Pane containing the details GridPane and the gray top bar -->
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="309.0" prefWidth="2000.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+	  fx:controller="org.lida.Interface.FileDetails">
+
+	<!-- Gray top bar -->
+	<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="2000.0" style="-fx-background-color: gainsboro;"/>
+
+	<!-- Details GridPane, containing all the three details columns -->
+	<GridPane fx:id="containerGridPane" alignment="CENTER" prefHeight="309.0" prefWidth="2000.0">
+		<columnConstraints>
+			<ColumnConstraints hgrow="NEVER" maxWidth="450.0" minWidth="450.0" prefWidth="450.0"/>
+			<ColumnConstraints hgrow="NEVER" maxWidth="650.0" minWidth="650.0" prefWidth="650.0"/>
+			<ColumnConstraints hgrow="NEVER" maxWidth="900.0" minWidth="900.0" prefWidth="900.0"/>
+		</columnConstraints>
+		<rowConstraints>
+			<RowConstraints maxHeight="28.0" minHeight="28.0" prefHeight="28.0" vgrow="NEVER"/>
+			<RowConstraints vgrow="ALWAYS"/>
+		</rowConstraints>
+
+		<!-- Left side: -->
+
+		<!-- Identifiers label -->
+		<Label alignment="CENTER" prefHeight="28.0" prefWidth="700.0" text="Identifiers and Variables:" textAlignment="CENTER"/>
+
+		<!-- NamesListView used to show the file Entity Identifiers and Variables -->
+		<ListView fx:id="namesListView" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1"/>
+
+		<!-- Center: -->
+
+		<!-- File path label -->
+		<Label fx:id="pathLabel" alignment="CENTER" onMouseClicked="#returnToFile" prefHeight="28.0" prefWidth="678.0" text="File path" textAlignment="CENTER" GridPane.columnIndex="1">
+			<cursor>
+				<Cursor fx:constant="HAND"/>
+			</cursor>
+		</Label>
+
+		<!-- AnchorPane containing all the file details -->
+		<AnchorPane onMouseClicked="#returnToFile" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+			<cursor>
+				<Cursor fx:constant="HAND"/>
+			</cursor>
+			<Rectangle fx:id="programmingColorRect" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="55.0" layoutX="33.0" layoutY="25.0" stroke="BLACK" strokeType="INSIDE" width="55.0"/>
+			<Label fx:id="programmingLanguageLabel" layoutX="110.0" layoutY="35.0" prefHeight="34.0" prefWidth="287.0" text="Programming language"/>
+			<Label fx:id="linesCountLabel" layoutX="33.0" layoutY="124.0" prefHeight="34.0" prefWidth="287.0" text="Lines:"/>
+			<Label fx:id="memorySizeLabel" layoutX="33.0" layoutY="195.0" prefHeight="34.0" prefWidth="287.0" text="Memory size:"/>
+			<Button layoutX="470.0" layoutY="125.0" mnemonicParsing="false" onAction="#openCurrentPath" prefHeight="28.0" prefWidth="117.0" text="Open"/>
+		</AnchorPane>
+
+		<!-- Right side: -->
+
+		<!-- Dependencies and Dependants TabPane: -->
+		<TabPane fx:id="depensTapPane" prefHeight="30.0" prefWidth="537.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+			<Tab text="Dependencies"/>
+			<Tab text="Dependants"/>
+			<padding>
+				<Insets left="375.0"/>
+			</padding>
+		</TabPane>
+
+		<!-- FileDetails will add here an EntityList to show an interactive list of the file Entity Dependencies -->
+	</GridPane>
+</Pane>

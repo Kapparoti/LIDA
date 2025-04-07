@@ -1,0 +1,52 @@
+# TypeScript rules
+
+
+Comments = [[//, ], [/*, */]]
+
+
+Identifiers {
+    Filename {
+        value: ||NAMEOFFILEONLY||
+    }
+    Exported Class {
+        # export default class ClassName
+        pattern: "^\s*(?:export\s+(?:default\s+)?)?(?:abstract\s+)?class\s+(\w+)"
+    }
+    Exported Interface {
+        # export interface InterfaceName
+        pattern: "^\s*(?:export\s+(?:default\s+)?)?interface\s+(\w+)"
+    }
+    Exported Enum {
+        # export enum EnumName
+        pattern: "^\s*(?:export\s+(?:default\s+)?)?enum\s+(\w+)"
+    }
+    Exported TypeAlias {
+        # export type TypeName = string
+        pattern: "^\s*(?:export\s+(?:default\s+)?)?type\s+(\w+)"
+    }
+    Exported Namespace {
+        # export namespace NamespaceName
+        pattern: "^\s*(?:export\s+(?:default\s+)?)?namespace\s+(\w+)"
+    }
+}
+
+Dependencies {
+    Import {
+        # import { Component } from 'library-name'
+        pattern: "import\s*(?:\{\s*[A-Za-z0-9_]+(?:\s*,\s*[A-Za-z0-9_]+)*\s*\}|[A-Za-z][A-Za-z0-9*]*)\sfrom\s*['\"](?:\.{1,2}\/)*(?:.*\/)*([A-Za-z][A-Za-z0-9*\-\.]*?)(?:\.[A-Za-z0-9]+)?['\"]\s*;?"
+    }
+    Require {
+        # const module = require('module-name')
+        pattern: "require\(['\"](?:\.{1,2}\/)*(?:.*\/)*([A-Za-z][A-Za-z0-9*\-\.]*?)(?:\.[A-Za-z0-9]+)?['\"]\)"
+    }
+    Extends {
+        # class ClassName extends BaseClass
+        pattern: "extends\s+(w+)"
+        condition: Import
+    }
+    Implements {
+        # class ClassName implements InterfaceName
+        pattern: "implements\s+(w+)"
+        condition: Import
+    }
+}

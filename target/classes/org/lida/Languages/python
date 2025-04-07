@@ -1,0 +1,46 @@
+ # Python rules
+
+
+Comments = [[#, ]]
+
+Text = [[", \", /", "], [', \', /', '], [""" , \""" , """], [''' , \''' , ''']]
+
+
+Identifiers {
+    Filename {
+        value: ||NAMEOFFILEONLY||
+    }
+    Dirname {
+        value: ||NAMEOFDIRECTORY||
+    }
+    Class {
+        # class ClassName
+        pattern: "class\s+(\w+)"
+    }
+}
+
+
+Dependencies {
+    Import {
+        # import FirstModule, SecondModule
+        pattern: "import\s+((?:\w+(?:\s*,\s*\w+)*))"
+    }
+    Import all module {
+        # from Module import *
+        pattern: "(\w+)\s+import\s+\*"
+    }
+    Import all dir {
+        # from Directory import *
+        pattern: "(\w+)\s+import\s+\*"
+        condition: !!NAMEOFDIRECTORY!! == "(\w+)\s+import\s+\*"
+        value: "value to check all other files"
+    }
+    Open {
+        # open("file.py",
+        pattern: "open\(\"(.+)\","
+    }
+    Parent {
+        # class ClassName(ParentClass)
+        pattern: "^\s*class\s+\w+\((\w+)"
+    }
+}
