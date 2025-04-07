@@ -16,7 +16,7 @@ public class LIDA extends Application {
 		Parent root = loader.load();
 
 		// Stage setup
-		primaryStage.setTitle("Language Independent Codebase Analyzer");
+		primaryStage.setTitle("Language Independent Dependency Analyzer");
 		primaryStage.setScene(new Scene(root));
 		primaryStage.setResizable(false);
 		primaryStage.show();
