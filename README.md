@@ -22,17 +22,17 @@ Handling my own syntax and logic geve me the possibility to abstract the concept
 
 For now, i write the rules for:
 
-Java
-c
-c++
-c#
-Rust
-Ruby
-Javascript
-Python
-Typescript
-Shell
-Go
+-Java  
+-c  
+-c++  
+-c#  
+-Rust  
+-Ruby  
+-Javascript  
+-Python  
+-Typescript  
+-Shell  
+-Go  
 
 For some of them the Dependency Analysis is still vague, but for others (like Java) the analysis is already quite precise.
 
