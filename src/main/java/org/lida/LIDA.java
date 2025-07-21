@@ -6,11 +6,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 
 public class LIDA extends Application {
 
 	@Override
-	public void start(Stage primaryStage) throws Exception {
+	public void start(Stage primaryStage) throws IOException {
 		// We load the main scene
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Interface/LIDA.fxml"));
 		Parent root = loader.load();
