@@ -2,7 +2,7 @@
 
 # LIDA: Language Independent Dependency Analyzer
 
-![lida graph](https://github.com/user-attachments/assets/732a960e-bdc8-43e2-8b47-24fa240e8b97)
+![lida graph](https://github.com/user-attachments/assets/0b1f5219-1f26-40a2-93e3-361ff81ad78a)
 
 </div>
 
