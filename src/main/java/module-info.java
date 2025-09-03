@@ -1,13 +1,15 @@
 module org.lida {
-    requires javafx.controls;
-    requires javafx.fxml;
+	requires org.json;
     requires jdk.jsobject;
     requires com.fasterxml.jackson.databind;
 	requires java.sql;
-	requires javafx.swing;
+
+	requires javafx.controls;
+    requires javafx.fxml;
+
 	requires jdk.compiler;
 	requires org.jgrapht.ext;
-	requires org.json;
+	requires javafx.swing;
 
 	opens org.lida to javafx.fxml;
     exports org.lida;

@@ -13,7 +13,7 @@ public record LanguageRule(String name, CodeReader.RuleTypes type, String patter
 		pattern of the rule (null if there are none),
 		total number of times the rule can be applied inside a file,
 		list of conditions that this rule needs to satisfy (null if there are none),
-		line
+		constant value of the rule (null if the rule is not constant),
 		hidden flag specifying if this rule should be displayed to the user (true by default),
 		debug flag enabling the console log for this rule (false by default)
 	 */

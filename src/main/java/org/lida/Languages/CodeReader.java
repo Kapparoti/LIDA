@@ -586,7 +586,7 @@ public class CodeReader {
 		LanguageRules languageRules = getLanguageRules(language);
 		if (languageRules.hasNoRules()) return dependencies;
 
-		// We keep only identifier-type rules
+		// We keep only dependency-type rules
 		ConcurrentLinkedQueue<LanguageRule> dependencyRules = languageRules.getRules().stream().filter(rule -> rule.type() == RuleTypes.dependency).collect(Collectors.toCollection(ConcurrentLinkedQueue::new));
 		if (dependencyRules.isEmpty()) return dependencies;
 

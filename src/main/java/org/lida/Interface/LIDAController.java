@@ -636,7 +636,8 @@ public class LIDAController {
 
 			isChooserOpen = false;
 			// If the selected directory is valid, we start the analysis on it
-			if (newDir != null && newDir.exists() && newDir.isDirectory() && (rootEntity == null || !newDir.getAbsolutePath().equals(rootEntity.getPath()))) startAnalysis(newDir.getAbsolutePath());
+			if (newDir != null && newDir.exists() && newDir.isDirectory() && (rootEntity == null || !newDir.getAbsolutePath().equals(rootEntity.getPath())))
+				startAnalysis(newDir.getAbsolutePath());
 		} else {
 			// Otherwise, we start the analysis on the selected recent directory
 			startAnalysis(selected);
