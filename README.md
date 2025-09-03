@@ -28,6 +28,7 @@ For now, i write the rules for:
 -c#  
 -Rust  
 -Ruby  
+-GDScript  
 -Javascript  
 -Python  
 -Typescript  
