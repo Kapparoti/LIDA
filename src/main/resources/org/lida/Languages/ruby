@@ -20,7 +20,11 @@ Dependencies {
     Require relative {
         # require_relative 'file_name'
         pattern: "^[\s+]*require_relative\s+['\"](?:\w+\/){0,}?(\w+)['\"]"
+
+		# conditions to check if they are in the same directory:
+
         condition: !!PATHOFDIRECTORY!! contains ||PATHOFDIRECTORY||
+        # and
         condition: !!PATHOFFILEONLY!! endswith "^[\s+]*require_relative\s+['\"](.*?)['\"]"
     }
     Load {
