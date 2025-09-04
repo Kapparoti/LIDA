@@ -24,11 +24,11 @@ Identifiers {
         pattern: "^(?:\s+)?(?:protected\s+)(?:static|final\s+){0,}class\s+(\w+)"
     }
     Public function {
-        # public void functionName()
+        # public type functionName()
         pattern: "^(?:\s+)?(?:public\s+)(?:static|final\s+){0,}(?:\w+\s+)(\w+)\(\)"
     }
     Protected function {
-        # protected void functionName()
+        # protected type functionName()
         pattern: "^(?:\s+)?(?:protected\s+)(?:static|final\s+){0,}(?:\w+\s+)(\w+)\(\)"
     }
     Public record {
