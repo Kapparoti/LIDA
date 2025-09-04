@@ -582,7 +582,7 @@ public class CodeReader {
 	public static List<FileDependency> findDependencies(AnalysisEntity entity, String language) {
 		List<FileDependency> fileDependencies = new ArrayList<>();
 		// Map to avoid iterating the fileDependencies list to find the same target entity
-		Map<AnalysisEntity, FileDependency> entityToFileDependencyMap = new HashMap<>();
+		Map<AnalysisEntity, FileDependency> entityToFileDependency = new HashMap<>();
 
 		// We get the rules for this language and return if there aren't any
 		LanguageRules languageRules = getLanguageRules(language);
@@ -610,9 +610,11 @@ public class CodeReader {
 				for (String dependencyName : tokens) {
 					if ((dependencyName = dependencyName.trim()).isEmpty()) continue;
 
-					// For each identifier, we check for the same name and a different Entity than the current one
-					for (Identifier identifier : allIdentifiers) {
-						if (!identifier.name().equals(dependencyName) || entity.hasIdentifier(identifier)) continue;
+					// For each identifier with the same name, we check for a different Entity than the current one (can't depend on itself)
+					List<Identifier> sameNameIdentifiers = DirectoryAnalyzer.nameToIdentifiers.get(dependencyName);
+					if (sameNameIdentifiers == null) continue;
+					for (Identifier identifier : sameNameIdentifiers) {
+						if (entity.hasIdentifier(identifier)) continue;
 
 						// We find the other Entity that could be a Dependency to this one
 						targetEntity = DirectoryAnalyzer.identifierToEntity.get(identifier);
@@ -624,23 +626,19 @@ public class CodeReader {
 						if (failedRule(lineProcessResult, entity, targetEntity, entityToAppliedRulesNames)) continue;
 
 						// We add the used rule to the applied ones
-						if (entityToAppliedRulesNames.containsKey(entity)) {
-							entityToAppliedRulesNames.get(entity).add(rule.name() + targetEntity.getPath());
-						} else {
-							entityToAppliedRulesNames.put(entity, new ArrayList<>(List.of(rule.name() + targetEntity.getPath())));
-						}
+						entityToAppliedRulesNames.computeIfAbsent(entity, k -> new ArrayList<>()).add(rule.name() + targetEntity.getPath());
 
 						// If the rule has the debug flag, we print the line and value that have been found
 						if (lineProcessResult.languageRule.debug())
 							System.out.println("Applied " + entity.getFileType() + " Dependency " + lineProcessResult.languageRule.name() + " on: \"" + lineProcessResult.line + "\" with result: " + matchGroup);
 
 						// If a FileDependency between these two Entities already exists, we add the newly found Dependency to it using the map
-						FileDependency fileDependency = entityToFileDependencyMap.get(targetEntity);
+						FileDependency fileDependency = entityToFileDependency.get(targetEntity);
 						if (fileDependency == null) {
 							// If there were not already a FileDependency between these two Entities, we create a new one
 							fileDependency = new FileDependency(targetEntity, new ArrayList<>(List.of(new Dependency(identifier, rule.name(), lineProcessResult.languageRule.hidden()))));
 
-							entityToFileDependencyMap.put(targetEntity, fileDependency);
+							entityToFileDependency.put(targetEntity, fileDependency);
 							fileDependencies.add(fileDependency);
 						} else {
 							fileDependency.addUniqueDependency(new Dependency(identifier, rule.name(), lineProcessResult.languageRule.hidden()));
@@ -665,23 +663,20 @@ public class CodeReader {
 					if (failedRule(lineProcessResult, entity, targetEntity, entityToAppliedRulesNames)) continue;
 
 					// We add the used rule to the applied ones
-					if (entityToAppliedRulesNames.containsKey(entity)) {
-						entityToAppliedRulesNames.get(entity).add(rule.name() + targetEntity.getPath());
-					} else {
-						entityToAppliedRulesNames.put(entity, new ArrayList<>(List.of(rule.name() + targetEntity.getPath())));
-					}
+					entityToAppliedRulesNames.computeIfAbsent(entity, k -> new ArrayList<>()).add(rule.name() + targetEntity.getPath());
+
 
 					// If the rule has the debug flag, we print the line that has been found
 					if (lineProcessResult.languageRule.debug())
 						System.out.println("Applied " + entity.getFileType() + " Dependency " + lineProcessResult.languageRule.name() + " on: \"" + lineProcessResult.line + "\" with result: " + identifier.name());
 
 					// If a FileDependency between these two Entities already exists, we add the newly found Dependency to it using the map
-					FileDependency fileDependency = entityToFileDependencyMap.get(targetEntity);
+					FileDependency fileDependency = entityToFileDependency.get(targetEntity);
 					if (fileDependency == null) {
 						// If there were not already a FileDependency between these two Entities, we create a new one
 						fileDependency = new FileDependency(targetEntity, new ArrayList<>(List.of(new Dependency(identifier, rule.name(), lineProcessResult.languageRule.hidden()))));
 
-						entityToFileDependencyMap.put(targetEntity, fileDependency);
+						entityToFileDependency.put(targetEntity, fileDependency);
 						fileDependencies.add(fileDependency);
 					} else {
 						// We only apply a constant Dependency once for FileDependency, so we check if it has a unique rule

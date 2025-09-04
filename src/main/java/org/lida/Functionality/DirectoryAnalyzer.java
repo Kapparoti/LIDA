@@ -91,6 +91,9 @@ public class DirectoryAnalyzer {
 	// Mapping of every Identifier to its AnalysisEntity. Used by CodeReader to get an Identifier's Entity after finding it in a code file
 	public static final Map<Identifier, AnalysisEntity> identifierToEntity = new ConcurrentHashMap<>();
 
+	// Mapping of every Identifier name to its Identifier. Used by CodeReader to get an Identifier by its name when searching for dependencies
+	public static final Map<String, List<Identifier>> nameToIdentifiers = new ConcurrentHashMap<>();
+
 	// --------------------- Analysis log ---------------------
 
 	// String list used as a log for Analysis messages. It's read and displayed by LIDAController
@@ -211,6 +214,7 @@ public class DirectoryAnalyzer {
 
 		// We also clear data that changes between different analysis tasks
 		identifierToEntity.clear();
+		nameToIdentifiers.clear();
 		analysisTreeRoot = null;
 	}
 
@@ -357,9 +361,10 @@ public class DirectoryAnalyzer {
 				newIdentifier = new Identifier(identifier.name(), identifier.ruleName(), maxKey + 1, identifier.hidden());
 			}
 
-			// We can finally add the new Identifier to its Entity and to the map
+			// We can finally add the new Identifier to its Entity and to the maps
 			entity.addIdentifier(newIdentifier);
 			identifierToEntity.put(newIdentifier, entity);
+			nameToIdentifiers.computeIfAbsent(newIdentifier.name(), k -> new ArrayList<>()).add(newIdentifier);
 		}
 	}
 
@@ -382,6 +387,7 @@ public class DirectoryAnalyzer {
 		executor.shutdown();
 		// We also clear the Identifiers to entities mapping as it is no longer necessary
 		identifierToEntity.clear();
+		nameToIdentifiers.clear();
 	}
 
 	// Helper function to link a single Entity
