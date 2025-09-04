@@ -23,15 +23,15 @@ Handling my own syntax and logic geve me the possibility to abstract the concept
 For now, i write the rules for:
 
 -Java  
--c  
--c++  
--c#  
+-C  
+-C++  
+-C#  
 -Rust  
 -Ruby  
 -GDScript  
--Javascript  
+-JavaScript  
 -Python  
--Typescript  
+-TypeScript  
 -Shell  
 -Go  
 
