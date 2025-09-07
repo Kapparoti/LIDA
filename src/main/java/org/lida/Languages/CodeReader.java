@@ -28,10 +28,10 @@ public class CodeReader {
 
 	// Retrieves the LanguageRules for a given language. If the rules aren't already loaded in the map, it loads them from the curresponding rules file
 	private static LanguageRules getLanguageRules(String language) {
-		synchronized (languageToRules) {
+		// If the language rules are already loaded inside the map, we can just retrieve them
+		if (languageToRules.containsKey(language)) return languageToRules.get(language);
 
-			// If the language rules are already loaded inside the map, we can just retrieve them
-			if (languageToRules.containsKey(language)) return languageToRules.get(language);
+		synchronized (languageToRules) {
 
 			// We must load the language rules and load them inside the map:
 			LanguageRules languageRules = new LanguageRules();
